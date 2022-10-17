@@ -7,8 +7,9 @@ import com.pio.oauth.auth.jwt.JwtHandler;
 import com.pio.oauth.auth.oauth_properties.OAuthProperties;
 import com.pio.oauth.auth.oauth_properties.OAuthProvider;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -21,6 +22,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class LoginController {
 
+    @Autowired
+    private ApplicationContext ac;
+
     private final LoginService loginService;
     private final JwtHandler jwtUtil;
     private final OAuthProperties properties;
@@ -29,12 +33,17 @@ public class LoginController {
 
     @GetMapping("/oauth/callback")
     public ResponseEntity<?> oauthLogin(@RequestParam String code, @RequestParam String providerType) {
+        String[] beanDefinitionNames = ac.getBeanDefinitionNames();
+        for (String beanDefinitionName : beanDefinitionNames) {
+            System.out.println(beanDefinitionName);
+        }
+
         OAuthProvider provider = properties.getProvider(providerType);
         AccessToken accessToken = loginService.getAccessToken(code, provider);
         Map<String, Object> memberInfo = loginService.getMemberInfo(accessToken, provider);
-
+//카카오 구글, 네이버 다 받아와서
         OAuthMemberInfo oAuthMemberInfo = OAuthMemberInfoFactory.createOAuthMemberInfo(
-            ProviderType.valueOf(providerType),
+            ProviderType.valueOf(providerType.toUpperCase()), //여기서 팩토리 메서드
             memberInfo
         );
 
@@ -48,13 +57,13 @@ public class LoginController {
 
         return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY)
             .header(HttpHeaders.SET_COOKIE, cookie.toString())
-            .header(HttpHeaders.LOCATION, "/")
+            .header(HttpHeaders.LOCATION, "/api/test")
             .build();
     }
 
     @GetMapping("/api/test")
-    public ResponseEntity<?> test(@RequestParam String code) {
-        return null;
+    public String test(@RequestParam String code) {
+        return "hi there";
     }
 
 }

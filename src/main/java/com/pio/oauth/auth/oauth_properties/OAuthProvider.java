@@ -15,7 +15,7 @@ public class OAuthProvider {
     private String redirectUri;
 
     // path
-    private String authorizePath;
+//    private String authorizePath;
     private String accessTokenPath;
     private String resourcePath;
 }

@@ -1,7 +1,10 @@
 spring:
+#  config:
+#    import: classpath:oauth.yml
+
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3308/issue_tracker?useSSL=false&useUnicode=true&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
+    url: jdbc:mysql://localhost:3308/oauth?useSSL=false&useUnicode=true&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
     username: root
     password:
   sql:
@@ -12,27 +15,28 @@ spring:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     show-sql: true
     hibernate:
-#      ddl-auto: update
+      ddl-auto: update
       format_sql: true
 
 oauth2:
   client:
-    kakao:
-      client-id: ${KAKAO_CLIENT_ID}
-      client-secret: ${KAKAO_CLIENT_SECRET}
-      scope: name,email,avatar_url
-      redirect-uri: http://localhost:8080/oauth/callback?providerType=kakao
-      access-token-path-path: https://kauth.kakao.com/oauth/token
-      resource-path: https://kapi.kakao.com/v2/user/me
+    provider:
+      kakao:
+        client-id: ${KAKAO_CLIENT_ID}
+        client-secret: ${KAKAO_CLIENT_SECRET}
+  #      scope: name,email,avatar_url
+        redirect-uri: http://localhost:8080/oauth/callback?providerType=kakao
+        access-token-path: https://kauth.kakao.com/oauth/token
+        resource-path: https://kapi.kakao.com/v2/user/me
 
 
-    google:
-      client-id: ${GOOGLE_CLIENT_ID}
-      client-secret: ${GOOGLE_CLIENT_SECRET}
-      scope: email,profile
-      redirect-uri: http://localhost:8080/oauth/callback?providerType=google
-      access-token-path: https://www.googleapis.com/oauth2/v4/token
-      resource-path: https://www.googleapis.com/oauth2/v3/userinfo
+      google:
+        client-id: ${GOOGLE_CLIENT_ID}
+        client-secret: ${GOOGLE_CLIENT_SECRET}
+  #      scope: email,profile
+        redirect-uri: http://localhost:8080/oauth/callback?providerType=google
+        access-token-path: https://www.googleapis.com/oauth2/v4/token
+        resource-path: https://www.googleapis.com/oauth2/v3/userinfo
 
 jwt:
   issuer: ${JWT_ISSUER}

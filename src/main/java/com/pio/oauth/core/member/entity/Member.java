@@ -30,7 +30,7 @@ public class Member {
     private String email;
 
     @Enumerated(EnumType.STRING)
-    @NotNull
+//    @NotNull
     private ProviderType providerType;
 
     public Member(String memberId, String email, String name) {

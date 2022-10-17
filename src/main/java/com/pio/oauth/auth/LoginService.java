@@ -2,13 +2,13 @@ package com.pio.oauth.auth;
 
 import com.pio.oauth.auth.info.OAuthMemberInfo;
 import com.pio.oauth.auth.jwt.JwtProperties;
-import com.pio.oauth.auth.oauth_properties.KakaoProperties;
 import com.pio.oauth.auth.oauth_properties.OAuthProperties;
 import com.pio.oauth.auth.oauth_properties.OAuthProvider;
 import com.pio.oauth.core.member.MemberRepository;
 import com.pio.oauth.core.member.entity.Member;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
@@ -89,7 +89,9 @@ public class LoginService {
 
     public void saveMember(OAuthMemberInfo memberInfo) {
         String memberId = memberInfo.getMemberId();
-        if (!memberRepository.existsByMemberId(memberId)) {
+        Member member1 = memberRepository.findByMemberId(memberId)
+            .orElseGet(() -> null);
+        if (!memberRepository.existsMemberByMemberId(memberId)) {
             Member member = new Member(memberInfo.getMemberId(), memberInfo.getEmail(), memberInfo.getName());
             memberRepository.save(member);
         }
