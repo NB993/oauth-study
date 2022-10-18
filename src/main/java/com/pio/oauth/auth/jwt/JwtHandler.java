@@ -5,6 +5,8 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
+import java.util.Date;
 import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,16 +22,14 @@ public class JwtHandler {
     }
 
     //todo: 공통 UserInfo를 입력받도록 변경
-    public JWT createToken(OAuthMemberInfo memberInfo) {
-        String jwt = Jwts.builder()
+    public String createToken(OAuthMemberInfo memberInfo, long expirationTime) {
+        return Jwts.builder()
             .setHeaderParam("typ", "JWT")
             .setIssuer(jwtProperties.getIssuer())
             .claim("userId", memberInfo.getMemberId())
-            .claim("userName", memberInfo.getName())
-            .claim("userEmail", memberInfo.getEmail())
+            .setExpiration(Date.from(Instant.now().plusMillis(expirationTime)))
             .signWith(createSecretKey())
             .compact();
-        return new JWT(jwt);
     }
 
     private SecretKey createSecretKey() {

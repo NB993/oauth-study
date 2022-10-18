@@ -1,10 +1,13 @@
 package com.pio.oauth.auth.info.impl;
 
+import com.pio.oauth.auth.ProviderType;
 import com.pio.oauth.auth.info.OAuthMemberInfo;
 import com.pio.oauth.core.member.entity.Member;
 import java.util.Map;
 
 public class GoogleMemberInfo extends OAuthMemberInfo {
+
+//    private ProviderType providerType = ProviderType.valueOf("GOOGLE");
 
     public GoogleMemberInfo(Map<String, Object> attributes) {
         super(attributes);
@@ -29,4 +32,9 @@ public class GoogleMemberInfo extends OAuthMemberInfo {
     public String getImageUrl() {
         return (String) attributes.get("picture");
     }
+
+//    @Override
+//    public ProviderType getProviderType() {
+//        return providerType;
+//    }
 }

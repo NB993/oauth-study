@@ -1,6 +1,6 @@
 package com.pio.oauth.auth.config;
 
-import com.pio.oauth.auth.oauth_properties.OAuthProperties;
+import com.pio.oauth.auth.domain.properties.OAuthProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;

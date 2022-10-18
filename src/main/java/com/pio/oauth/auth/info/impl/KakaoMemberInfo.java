@@ -1,9 +1,12 @@
 package com.pio.oauth.auth.info.impl;
 
+import com.pio.oauth.auth.ProviderType;
 import com.pio.oauth.auth.info.OAuthMemberInfo;
 import java.util.Map;
 
 public class KakaoMemberInfo extends OAuthMemberInfo {
+
+//    private ProviderType providerType = ProviderType.valueOf("KAKAO");
 
     public KakaoMemberInfo(Map<String, Object> attributes) {
         super(attributes);
@@ -38,4 +41,9 @@ public class KakaoMemberInfo extends OAuthMemberInfo {
 
         return (String) properties.get("profile_image");
     }
+
+//    @Override
+//    public ProviderType getProviderType() {
+//        return providerType;
+//    }
 }

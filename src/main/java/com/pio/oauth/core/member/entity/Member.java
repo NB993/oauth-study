@@ -33,12 +33,13 @@ public class Member {
     private String email;
 
     @Enumerated(EnumType.STRING)
-//    @NotNull
+    @NotNull
     private ProviderType providerType;
 
-    public Member(String memberId, String email, String name) {
+    public Member(String memberId, String email, String name/*, ProviderType providerType*/) {
         this.memberId = memberId;
         this.email = email;
         this.name = name;
+//        this.providerType = providerType;
     }
 }

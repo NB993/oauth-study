@@ -1,4 +1,4 @@
-package com.pio.oauth.auth.oauth_properties;
+package com.pio.oauth.auth.domain.provider;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -15,7 +15,6 @@ public class OAuthProvider {
     private String redirectUri;
 
     // path
-//    private String authorizePath;
     private String accessTokenPath;
     private String resourcePath;
 }

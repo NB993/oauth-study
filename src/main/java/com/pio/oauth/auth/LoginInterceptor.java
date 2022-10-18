@@ -1,5 +1,6 @@
 package com.pio.oauth.auth;
 
+import com.pio.oauth.auth.jwt.JwtConst;
 import com.pio.oauth.auth.jwt.JwtHandler;
 import com.pio.oauth.core.member.MemberRepository;
 import com.pio.oauth.core.member.entity.Member;
@@ -37,18 +38,17 @@ public class LoginInterceptor implements HandlerInterceptor {
         String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         verifyHeader(authHeader);
 
-        Claims claims = jwtHandler.decodeJwt(authHeader.split(" ")[1]);
+        Claims claims = jwtHandler.decodeJwt(authHeader.split(JwtConst.BEARER)[1]);
         return claims.get(MEMBER_ID, String.class);
     }
 
 
     private void verifyHeader(String authorization) {
-        if (authorization.trim().isEmpty() || authorization == null) {
+        if (authorization == null || authorization.trim().isEmpty()) {
             throw new IllegalArgumentException("토큰이 전달되지 않았습니다.");
         }
         if (!authorization.startsWith(BEARER)) {
             throw new IllegalArgumentException("토큰 인증 방식은 Bearer 입니다.");
         }
     }
-
 }
