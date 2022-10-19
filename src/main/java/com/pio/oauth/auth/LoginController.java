@@ -1,7 +1,7 @@
 package com.pio.oauth.auth;
 
-import static com.pio.oauth.auth.jwt.JwtConst.ACCESS_TOKEN_EXPIRED_TIME;
-import static com.pio.oauth.auth.jwt.JwtConst.REFRESH_TOKEN_EXPIRED_TIME;
+import static com.pio.oauth.auth.jwt.JwtConst.ACCESS_TOKEN_EXPIRATION_PERIOD;
+import static com.pio.oauth.auth.jwt.JwtConst.REFRESH_TOKEN_EXPIRATION_PERIOD;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -23,13 +23,13 @@ public class LoginController {
         Token token = loginService.createToken(code, providerType);
 
         ResponseCookie cookie = ResponseCookie.from("access_token", token.getAccessToken())
-            .maxAge(ACCESS_TOKEN_EXPIRED_TIME)
+            .maxAge(ACCESS_TOKEN_EXPIRATION_PERIOD)
             .path("/")
             .httpOnly(true)
             .build();
 
         ResponseCookie cookie2 = ResponseCookie.from("refresh_token", token.getRefreshToken())
-            .maxAge(REFRESH_TOKEN_EXPIRED_TIME)
+            .maxAge(REFRESH_TOKEN_EXPIRATION_PERIOD)
             .path("/")
             .httpOnly(true)
             .build();
