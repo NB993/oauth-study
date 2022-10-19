@@ -1,8 +1,8 @@
 package com.pio.oauth.auth;
 
-import static com.pio.oauth.auth.jwt.JwtConst.ACCESS_TOKEN_EXPIRED_TIME;
+import static com.pio.oauth.auth.jwt.JwtConst.ACCESS_TOKEN_EXPIRATION_PERIOD;
 import static com.pio.oauth.auth.jwt.JwtConst.BEARER;
-import static com.pio.oauth.auth.jwt.JwtConst.REFRESH_TOKEN_EXPIRED_TIME;
+import static com.pio.oauth.auth.jwt.JwtConst.REFRESH_TOKEN_EXPIRATION_PERIOD;
 
 import com.pio.oauth.auth.info.OAuthMemberInfo;
 import com.pio.oauth.auth.info.OAuthMemberInfoFactory;
@@ -46,8 +46,8 @@ public class LoginService {
 
         saveMember(oAuthMemberInfo);
         return new Token(
-            jwtHandler.createToken(oAuthMemberInfo, ACCESS_TOKEN_EXPIRED_TIME),
-            jwtHandler.createToken(oAuthMemberInfo, REFRESH_TOKEN_EXPIRED_TIME)
+            jwtHandler.createAccessToken(oAuthMemberInfo, ACCESS_TOKEN_EXPIRATION_PERIOD),
+            jwtHandler.createRefreshToken(REFRESH_TOKEN_EXPIRATION_PERIOD)
         );
     }
 

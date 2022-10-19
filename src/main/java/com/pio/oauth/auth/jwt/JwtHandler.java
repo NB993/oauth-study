@@ -21,13 +21,21 @@ public class JwtHandler {
         this.jwtProperties = jwtProperties;
     }
 
-    //todo: 공통 UserInfo를 입력받도록 변경
-    public String createToken(OAuthMemberInfo memberInfo, long expirationTime) {
+    public String createAccessToken(OAuthMemberInfo memberInfo, long expirationPeriod) {
         return Jwts.builder()
             .setHeaderParam("typ", "JWT")
             .setIssuer(jwtProperties.getIssuer())
             .claim("userId", memberInfo.getMemberId())
-            .setExpiration(Date.from(Instant.now().plusMillis(expirationTime)))
+            .setExpiration(Date.from(Instant.now().plusMillis(expirationPeriod)))
+            .signWith(createSecretKey())
+            .compact();
+    }
+
+    public String createRefreshToken(long expirationPeriod) {
+        return Jwts.builder()
+            .setHeaderParam("typ", "JWT")
+            .setIssuer(jwtProperties.getIssuer())
+            .setExpiration(Date.from(Instant.now().plusMillis(expirationPeriod)))
             .signWith(createSecretKey())
             .compact();
     }
