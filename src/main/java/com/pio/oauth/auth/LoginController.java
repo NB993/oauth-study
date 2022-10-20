@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,25 +27,29 @@ public class LoginController {
         ResponseCookie cookie = ResponseCookie.from("access_token", token.getAccessToken())
             .maxAge(ACCESS_TOKEN_EXPIRATION_PERIOD)
             .path("/")
-            .httpOnly(true)
             .build();
 
         ResponseCookie cookie2 = ResponseCookie.from("refresh_token", token.getRefreshToken())
             .maxAge(REFRESH_TOKEN_EXPIRATION_PERIOD)
             .path("/")
-            .httpOnly(true)
             .build();
 
         return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY)
             .header(HttpHeaders.SET_COOKIE, cookie.toString())
             .header(HttpHeaders.SET_COOKIE, cookie2.toString())
-            .header(HttpHeaders.LOCATION, "/api/test")
+            .header(HttpHeaders.LOCATION, "/test2")
             .build();
+    }
+
+    @GetMapping("/test2")
+    public ModelAndView page() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("test.html");
+        return modelAndView;
     }
 
     @GetMapping("/api/test")
     public String test() {
         return "hi there";
     }
-
 }

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+  <button />
+  <script type="text/javascript" >
+
+
+    async function send() {
+      let url = 'http://localhost:8080/api/test';
+      let accessToken = getCookie("access_token");
+      let refreshToken = getCookie("refresh_token");
+      let response = await fetch(url, {
+        headers: {
+          Authorization: "Bearer " + accessToken,
+          CustomHeader: "Bearer " + refreshToken
+        }
+      });
+
+      let commits = await response.json();
+    }
+
+    function getCookie(name) {
+      let matches = document.cookie.match(new RegExp(
+        "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+      ));
+      return matches ? decodeURIComponent(matches[1]) : undefined;
+    }
+
+    //
+    const button = document.querySelector('button');
+
+    button.addEventListener('click', event => {
+      send();
+    });
+
+  </script>
+</body>
+</html>

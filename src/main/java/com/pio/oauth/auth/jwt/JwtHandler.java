@@ -25,7 +25,7 @@ public class JwtHandler {
         return Jwts.builder()
             .setHeaderParam("typ", "JWT")
             .setIssuer(jwtProperties.getIssuer())
-            .claim("userId", memberInfo.getMemberId())
+            .claim("memberId", memberInfo.getMemberId())
             .setExpiration(Date.from(Instant.now().plusMillis(expirationPeriod)))
             .signWith(createSecretKey())
             .compact();
