@@ -9,12 +9,14 @@ import com.pio.oauth.auth.info.OAuthMemberInfoFactory;
 import com.pio.oauth.auth.jwt.JwtHandler;
 import com.pio.oauth.auth.domain.properties.OAuthProperties;
 import com.pio.oauth.auth.domain.provider.OAuthProvider;
+import com.pio.oauth.auth.jwt.Token;
 import com.pio.oauth.core.member.MemberRepository;
 import com.pio.oauth.core.member.entity.Member;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -31,6 +33,7 @@ public class LoginService {
     private final JwtHandler jwtHandler;
     private final OAuthProperties properties;
     private final MemberRepository memberRepository;
+    private final RedisTemplate<String, String> redisTemplate;
 
     private static final ParameterizedTypeReference<Map<String, Object>> PARAMETERIZED_RESPONSE_TYPE =
         new ParameterizedTypeReference<>() {};
@@ -43,11 +46,14 @@ public class LoginService {
             ProviderType.valueOf(providerType.toUpperCase()),
             memberInfo
         );
-
         saveMember(oAuthMemberInfo);
+
+        String refreshToken = jwtHandler.createRefreshToken(REFRESH_TOKEN_EXPIRATION_PERIOD);
+        redisTemplate.opsForValue().set(oAuthMemberInfo.getMemberId(), refreshToken);
+
         return new Token(
             jwtHandler.createAccessToken(oAuthMemberInfo, ACCESS_TOKEN_EXPIRATION_PERIOD),
-            jwtHandler.createRefreshToken(REFRESH_TOKEN_EXPIRATION_PERIOD)
+            refreshToken
         );
     }
 
@@ -92,6 +98,7 @@ public class LoginService {
         return response.getBody();
     }
 
+    //todo: oauth 계정의 이메일이나 이름 등의 프로필 정보가 가입 이후로 변경되었을 수 있음. 때문에 이미 가입되어 있더라도 업데이트가 필요할 듯.
     private void saveMember(OAuthMemberInfo memberInfo) {
         String memberId = memberInfo.getMemberId();
         if (!memberRepository.existsMemberByMemberId(memberId)) {

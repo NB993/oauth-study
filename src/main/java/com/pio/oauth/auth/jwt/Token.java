@@ -1,4 +1,4 @@
-package com.pio.oauth.auth;
+package com.pio.oauth.auth.jwt;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

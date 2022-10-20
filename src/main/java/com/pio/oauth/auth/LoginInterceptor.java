@@ -9,6 +9,7 @@ import java.util.NoSuchElementException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -18,6 +19,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 public class LoginInterceptor implements HandlerInterceptor {
 
     private final JwtHandler jwtHandler;
+    private final RedisTemplate<String, String> redisTemplate;
     private final MemberRepository memberRepository;
 
     private static final String BEARER = "Bearer";
@@ -42,7 +44,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         return claims.get(MEMBER_ID, String.class);
     }
 
-
+    //todo: 이 예외케이스들이 docdeJwt() -> parseClaimsJws()에서 발생할 예외들인 것 같음. 확인 후 맞다면 제거.
     private void verifyHeader(String authorization) {
         if (authorization == null || authorization.trim().isEmpty()) {
             throw new IllegalArgumentException("토큰이 전달되지 않았습니다.");

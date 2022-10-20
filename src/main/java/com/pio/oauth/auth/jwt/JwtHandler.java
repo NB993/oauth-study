@@ -44,12 +44,17 @@ public class JwtHandler {
         return Keys.hmacShaKeyFor(jwtProperties.getSecret().getBytes(StandardCharsets.UTF_8));
     }
 
+    /* todo: parseClaimsJws()에서 발생하는 예외 케이스들
+        - UnsupportedJwtException : jwt가 예상하는 형식과 다른 형식이거나 구성
+        - MalformedJwtException : 잘못된 jwt 구조
+        - ExpiredJwtException : JWT의 유효기간이 초과 -> 이 핸들러에서 리프레시 토큰을 확인해봐야 하는데 음.. 어떻게?
+        - SignatureException : JWT의 서명실패(변조 데이터)
+        위 예외 처리하도록 핸들러 추가하기 */
     public Claims decodeJwt(String token) {
         return Jwts.parserBuilder()
-            .setSigningKey(createSecretKey())
-            .build()
-            .parseClaimsJws(token)
-            .getBody();
+                .setSigningKey(createSecretKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 }
-
