@@ -44,7 +44,7 @@ public class NaverMemberInfo extends OAuthMemberInfo {
     }
 
     @Override
-    public String getImageUrl() {
+    public String getProfileUrl() {
         Map<String, Object> response = (Map<String, Object>) attributes.get("response");
         if (response == null) {
             return null;

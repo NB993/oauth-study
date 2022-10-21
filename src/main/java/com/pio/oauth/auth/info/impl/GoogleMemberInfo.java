@@ -29,7 +29,7 @@ public class GoogleMemberInfo extends OAuthMemberInfo {
     }
 
     @Override
-    public String getImageUrl() {
+    public String getProfileUrl() {
         return (String) attributes.get("picture");
     }
 

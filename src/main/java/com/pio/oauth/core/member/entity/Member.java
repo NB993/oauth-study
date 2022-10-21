@@ -32,6 +32,8 @@ public class Member {
 
     private String email;
 
+    private String profileUrl;
+
     @Enumerated(EnumType.STRING)
     @NotNull
     private ProviderType providerType;
@@ -41,5 +43,12 @@ public class Member {
         this.email = email;
         this.name = name;
 //        this.providerType = providerType;
+    }
+
+    public Member update(String email, String name, String profileUrl) {
+        this.email = email;
+        this.name = name;
+        this.profileUrl = profileUrl;
+        return this;
     }
 }

@@ -23,7 +23,11 @@ public abstract class OAuthMemberInfo {
 
     public abstract String getEmail();
 
-    public abstract String getImageUrl();
+    public abstract String getProfileUrl();
 
 //    public abstract ProviderType getProviderType();
+
+    public Member toMember() {
+        return new Member(getMemberId(), getEmail(), getName());
+    }
 }

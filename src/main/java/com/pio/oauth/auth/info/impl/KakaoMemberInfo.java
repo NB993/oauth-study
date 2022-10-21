@@ -33,7 +33,7 @@ public class KakaoMemberInfo extends OAuthMemberInfo {
     }
 
     @Override
-    public String getImageUrl() {
+    public String getProfileUrl() {
         Map<String, Object> properties = (Map<String, Object>) attributes.get("properties");
         if (properties == null) {
             return null;

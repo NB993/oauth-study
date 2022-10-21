@@ -1,6 +1,5 @@
 package com.pio.oauth.auth.jwt;
 
-import com.pio.oauth.auth.info.OAuthMemberInfo;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -21,20 +20,12 @@ public class JwtHandler {
         this.jwtProperties = jwtProperties;
     }
 
-    public String createAccessToken(OAuthMemberInfo memberInfo, long expirationPeriod) {
+    public String createToken(String memberId, long expirationPeriod) {
         return Jwts.builder()
             .setHeaderParam("typ", "JWT")
             .setIssuer(jwtProperties.getIssuer())
-            .claim("memberId", memberInfo.getMemberId())
-            .setExpiration(Date.from(Instant.now().plusMillis(expirationPeriod)))
-            .signWith(createSecretKey())
-            .compact();
-    }
-
-    public String createRefreshToken(long expirationPeriod) {
-        return Jwts.builder()
-            .setHeaderParam("typ", "JWT")
-            .setIssuer(jwtProperties.getIssuer())
+            .claim("memberId", memberId)
+            .setIssuedAt(new Date())
             .setExpiration(Date.from(Instant.now().plusMillis(expirationPeriod)))
             .signWith(createSecretKey())
             .compact();
@@ -57,4 +48,5 @@ public class JwtHandler {
                 .parseClaimsJws(token)
                 .getBody();
     }
+
 }

@@ -16,7 +16,7 @@
       let response = await fetch(url, {
         headers: {
           Authorization: "Bearer " + accessToken,
-          CustomHeader: "Bearer " + refreshToken
+          Refresh-Token: "Bearer " + refreshToken
         }
       });
 

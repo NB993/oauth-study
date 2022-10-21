@@ -4,6 +4,7 @@ import static com.pio.oauth.auth.jwt.JwtConst.ACCESS_TOKEN_EXPIRATION_PERIOD;
 import static com.pio.oauth.auth.jwt.JwtConst.REFRESH_TOKEN_EXPIRATION_PERIOD;
 
 import com.pio.oauth.auth.jwt.Token;
+import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -39,6 +40,25 @@ public class LoginController {
             .header(HttpHeaders.SET_COOKIE, cookie2.toString())
             .header(HttpHeaders.LOCATION, "/test2")
             .build();
+    }
+
+    @GetMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest request) {
+        //todo: 엑세스토큰과 리프레시토큰 쿠키를 지우고, 레디스에 저장된 리프레시 토큰도 삭제한다.
+        String token = request.getHeader("Refresh-Token");
+        String parsedRefreshToken = token.split("Bearer ")[1];
+
+        ResponseCookie cookie = ResponseCookie.from("access_token", null)
+            .maxAge(0)
+            .path("/")
+            .build();
+
+        ResponseCookie cookie2 = ResponseCookie.from("refresh_token", null)
+            .maxAge(0)
+            .path("/")
+            .build();
+
+        return null;
     }
 
     @GetMapping("/test2")

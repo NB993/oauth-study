@@ -12,6 +12,7 @@ import com.pio.oauth.auth.domain.provider.OAuthProvider;
 import com.pio.oauth.auth.jwt.Token;
 import com.pio.oauth.core.member.MemberRepository;
 import com.pio.oauth.core.member.entity.Member;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -48,11 +49,13 @@ public class LoginService {
         );
         saveMember(oAuthMemberInfo);
 
-        String refreshToken = jwtHandler.createRefreshToken(REFRESH_TOKEN_EXPIRATION_PERIOD);
+        String refreshToken = jwtHandler.createToken(oAuthMemberInfo.getMemberId(), REFRESH_TOKEN_EXPIRATION_PERIOD);
         redisTemplate.opsForValue().set(oAuthMemberInfo.getMemberId(), refreshToken);
+        //레디스에 리프레시 토큰을 저장하고 리프레시 토큰 만료기간에 맞춰 레디스에서도 삭제되도록 함.
+        redisTemplate.expire(oAuthMemberInfo.getMemberId(), Duration.ofSeconds(REFRESH_TOKEN_EXPIRATION_PERIOD));
 
         return new Token(
-            jwtHandler.createAccessToken(oAuthMemberInfo, ACCESS_TOKEN_EXPIRATION_PERIOD),
+            jwtHandler.createToken(oAuthMemberInfo.getMemberId(), ACCESS_TOKEN_EXPIRATION_PERIOD),
             refreshToken
         );
     }
@@ -98,16 +101,11 @@ public class LoginService {
         return response.getBody();
     }
 
-    //todo: oauth 계정의 이메일이나 이름 등의 프로필 정보가 가입 이후로 변경되었을 수 있음. 때문에 이미 가입되어 있더라도 업데이트가 필요할 듯.
     private void saveMember(OAuthMemberInfo memberInfo) {
-        String memberId = memberInfo.getMemberId();
-        if (!memberRepository.existsMemberByMemberId(memberId)) {
-            Member member = new Member(
-                memberInfo.getMemberId(),
-                memberInfo.getEmail(),
-                memberInfo.getName()
-            );
-            memberRepository.save(member);
-        }
+        Member findMember = memberRepository.findByMemberId(memberInfo.getMemberId())
+            .map(member -> member.update(memberInfo.getEmail(), memberInfo.getName(), memberInfo.getProfileUrl()))
+            .orElseGet(memberInfo::toMember);
+
+        memberRepository.save(findMember);
     }
 }
